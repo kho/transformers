@@ -259,6 +259,7 @@ class LasrCTCConfig(ParakeetCTCConfig):
                 The config object or dictionary of the encoder.
             pad_token_id (`int`, *optional*, defaults to 0):
                 Padding token id. Also used as blank token id.
+            inputs_to_logits_ratio: The ratio between the number of input log-Mel frames and output logits.
     Example:
         ```python
         >>> from transformers import LasrForCTC, LasrCTCConfig
@@ -280,6 +281,7 @@ class LasrCTCConfig(ParakeetCTCConfig):
         ctc_zero_infinity=True,
         encoder_config: Union[dict, LasrEncoderConfig] = None,
         pad_token_id=0,
+        inputs_to_logits_ratio=640,
         **kwargs,
     ):
         super().__init__(
@@ -290,6 +292,9 @@ class LasrCTCConfig(ParakeetCTCConfig):
             pad_token_id=pad_token_id,
             **kwargs,
         )
+        # Used in chunked decoding [https://huggingface.co/blog/asr-chunking] in the ASR pipeline
+        # [https://github.com/huggingface/transformers/blob/142ae3d9182e68dfcbf6b595a18a25a7f2d503ea/src/transformers/pipelines/automatic_speech_recognition.py#L450].
+        self.inputs_to_logits_ratio = inputs_to_logits_ratio
 
 
 class LasrEncoderSubsampling(nn.Module):
